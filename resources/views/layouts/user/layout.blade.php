@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="id">
-{{-- <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"> --}}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Page</title>
+    <title>{{ $title }}</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <!-- Custom Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
 
 </head>
 
@@ -43,10 +42,11 @@
         <div class="nav-header">
             <div class="brand-logo">
                 <a href="#">
-                    <b class="logo-abbr"><img src="images/logo.png" alt=""> </b>
-                    <span class="logo-compact"><img src="./images/logo-compact.png" alt=""></span>
+                    {{-- <b class="logo-abbr"><img src="{{ asset('images/logo.png') }}" alt=""> </b>
+                    <span class="logo-compact"><img src="{{ asset('./images/logo-compact.png') }}"
+                            alt=""></span> --}}
                     <span class="brand-title">
-                        <img src="images/logo-text.png" alt="Logo">
+                        {{-- <img src="{{ asset('images/logo-text.png') }}" alt="Logo"> --}}
                     </span>
                 </a>
             </div>
@@ -62,7 +62,9 @@
             <div class="header-content clearfix">
                 <div class="nav-control">
                     <div class="hamburger">
-                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                        <span class="toggle-icon">
+                            <i class="icon-menu"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="header-right">
@@ -70,13 +72,18 @@
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                                 <span class="activity active"></span>
-                                <img src="images/user/1.png" height="40" width="40" alt="">
+                                <img src="{{ asset('images/user/1.png') }}" height="40" width="40"
+                                    alt="">
                             </div>
                             <div class="drop-down dropdown-profile dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
-                                            <a href="#"><i class="icon-user"></i>
+                                            {{ $users->nama }}
+                                        </li>
+                                        <li>
+                                            <a href="#"><i
+                                                    class="icon-user {{ request()->segment('2') == 'profile' ? 'active' : '' }}"></i>
                                                 <span>Profile</span>
                                             </a>
                                         </li>
@@ -104,53 +111,142 @@
         <div class="nk-sidebar">
             <div class="nk-nav-scroll">
                 <ul class="metismenu" id="menu">
-                    <li class="nav-label">Dashboard</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./index.html">Home 1</a></li>
-                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
-                        </ul>
-                    </li>
-
-                    <li class="nav-label">Apps</li>
-                    @if (Auth::user()->role == 'operator')
+                    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'vendor')
+                        <li class="nav-label">
+                            DASHBOARD
+                        </li>
+                        <li>
+                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                                <i class="icon-speedometer menu-icon"></i>
+                                <span class="nav-text {{ $title === 'dashboard' ? 'active' : '' }}">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-label">Apps</li>
                         <li class="mega-menu mega-menu-sm">
                             <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                                 <i class="icon-globe-alt menu-icon"></i>
-                                <span class="nav-text">Data Master</span>
+                                <span class="nav-text {{ $title === 'Data Master' ? 'active' : '' }}">
+                                    Data Master
+                                </span>
                             </a>
                             <ul aria-expanded="false">
-                                <li><a href="/user">Data User</a></li>
-                                <li><a href="/jenisbarang">Data Jenis Barang</a></li>
-                                <li><a href="/barang">Data Barang</a></li>
+                                <li>
+                                    <a href="{{ url('admin/data-user') }}"
+                                        class="{{ request()->segment('2') == 'data-users' ? 'active' : '' }}">
+                                        Data User
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="{{ $title === 'Data Jenis Barang' ? 'active' : '' }}">Data
+                                        Jenis Barang
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="{{ $title === 'Data Barang' ? 'active' : '' }}">
+                                        Data Barang
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="/diskon" aria-expanded="false">
+                            <a href="#" aria-expanded="false">
                                 <i class="icon-badge menu-icon"></i>
-                                <span class="nav-text">Setting Diskon</span>
+                                <span class="nav-text {{ $title === 'Setting Diskon' ? 'active' : '' }}">
+                                    Setting Diskon
+                                </span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/laporan" aria-expanded="false">
+                            <a href="#" aria-expanded="false">
                                 <i class="icon-menu menu-icon"></i>
-                                <span class="nav-text">Data Laporan</span>
+                                <span class="nav-text {{ $title === 'Data Laporan' ? 'active' : '' }}">
+                                    Data Laporan
+                                </span>
                             </a>
                         </li>
-                    @endif
-
-                    @if (Auth::user()->role == 'keuangan')
                         <li>
                             <a href="/transaksi" aria-expanded="false">
                                 <i class="icon-grid menu-icon"></i>
-                                <span class="nav-text">Data Transaksi</span>
+                                <span class="nav-text {{ $title === 'Data Transaksi' ? 'active' : '' }}">
+                                    Data Transaksi
+                                </span>
+                            </a>
+                        </li>
+                    @elseif (Auth::user()->role == 'user')
+                        <li class="nav-label">
+                            DASHBOARD
+                        </li>
+                        <li>
+                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                                <i class="icon-speedometer menu-icon"></i>
+                                <span class="nav-text {{ $title === 'dashboard' ? 'active' : '' }}">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-label">Apps</li>
+                        <li class="mega-menu mega-menu-sm">
+                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                                <i class="icon-globe-alt menu-icon"></i>
+                                <span class="nav-text {{ $title === 'Data Master' ? 'active' : '' }}">
+                                    Data Master
+                                </span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li>
+                                    <a href="{{ url('admin/data-user') }}"
+                                        class="{{ request()->segment('2') == 'data-users' ? 'active' : '' }}">
+                                        Data User
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="{{ $title === 'Data Jenis Barang' ? 'active' : '' }}">Data
+                                        Jenis Barang
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="{{ $title === 'Data Barang' ? 'active' : '' }}">
+                                        Data Barang
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" aria-expanded="false">
+                                <i class="icon-badge menu-icon"></i>
+                                <span class="nav-text {{ $title === 'Setting Diskon' ? 'active' : '' }}">
+                                    Setting Diskon
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" aria-expanded="false">
+                                <i class="icon-menu menu-icon"></i>
+                                <span class="nav-text {{ $title === 'Data Laporan' ? 'active' : '' }}">
+                                    Data Laporan
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/transaksi" aria-expanded="false">
+                                <i class="icon-grid menu-icon"></i>
+                                <span class="nav-text {{ $title === 'Data Transaksi' ? 'active' : '' }}">
+                                    Data Transaksi
+                                </span>
                             </a>
                         </li>
                     @endif
+
+
+
+                    {{-- <ul aria-expanded="false">
+                            <li><a href="./index.html">Home 1</a></li>
+                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
+                        </ul> --}}
+
+
+
                 </ul>
             </div>
         </div>
@@ -189,15 +285,15 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="/js/common.min.js"></script>
-    <script src="/js/custom.min.js"></script>
-    <script src="/js/settings.js"></script>
-    <script src="/js/gleek.js"></script>
-    <script src="/js/styleSwitcher.js"></script>
+    <script src="{{ asset('/js/common.min.js') }}"></script>
+    <script src="{{ asset('/js/custom.min.js') }}"></script>
+    <script src="{{ asset('/js/settings.js') }}"></script>
+    <script src="{{ asset('/js/gleek.js') }}"></script>
+    <script src="{{ asset('/js/styleSwitcher.js') }}"></script>
 
-    <script src="/js/jquery.dataTables.min.js"></script>
-    <script src="/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/js/datatable-basic.min.js"></script>
+    <script src="{{ asset('/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('/js/datatable-basic.min.js') }}"></script>
 
 </body>
 

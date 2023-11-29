@@ -13,17 +13,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('users.update', $user->id) }}" method="post">
+                    <form action="/admin" method="post">
                         @csrf
-                        @method('PUT')
-
+                        {{-- @method('PUT') --}}
                         <div class="mb-3 row">
-                            <label for="name" class="col-md-4 col-form-label text-md-end text-start">Name</label>
+                            <label for="nama" class="col-md-4 col-form-label text-md-end text-start">Name</label>
                             <div class="col-md-6">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    id="name" name="name" value="{{ $user->name }}">
-                                @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    id="nama" name="nama" value={{ $user->nama }}>
+                                @if ($errors->has('nama'))
+                                    <span class="text-danger">{{ $errors->first('nama') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -33,7 +32,7 @@
                                 Address</label>
                             <div class="col-md-6">
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    id="email" name="email" value="{{ $user->email }}">
+                                    id="email" name="email" value={{ $user->email }}>
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
@@ -61,20 +60,20 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="roles" class="col-md-4 col-form-label text-md-end text-start">Roles</label>
+                            <label for="role" class="col-md-4 col-form-label text-md-end text-start">Role</label>
                             <div class="col-md-6">
-                                <select class="form-select @error('roles') is-invalid @enderror" multiple aria-label="Roles"
-                                    id="roles" name="roles[]">
-                                    @forelse ($roles as $role)
+                                <select class="form-select @error('role') is-invalid @enderror" multiple aria-label="role"
+                                    id="role" name="role">
+                                    @forelse ($role as $role)
                                         @if ($role != 'Super Admin')
                                             <option value="{{ $role }}"
-                                                {{ in_array($role, $userRoles ?? []) ? 'selected' : '' }}>
+                                                {{ in_array($role, $userrole ?? []) ? 'selected' : '' }}>
                                                 {{ $role }}
                                             </option>
                                         @else
                                             @if (Auth::user()->hasRole('Super Admin'))
                                                 <option value="{{ $role }}"
-                                                    {{ in_array($role, $userRoles ?? []) ? 'selected' : '' }}>
+                                                    {{ in_array($role, $userrole ?? []) ? 'selected' : '' }}>
                                                     {{ $role }}
                                                 </option>
                                             @endif
@@ -83,8 +82,8 @@
                                     @empty
                                     @endforelse
                                 </select>
-                                @if ($errors->has('roles'))
-                                    <span class="text-danger">{{ $errors->first('roles') }}</span>
+                                @if ($errors->has('role'))
+                                    <span class="text-danger">{{ $errors->first('role') }}</span>
                                 @endif
                             </div>
                         </div>

@@ -7,31 +7,25 @@ use App\Http\Requests\UpdateRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
 
-    function index()
+    function index($id)
     {
-        return view('admin.index', [
+        return view('user.index', [
             'users' => User::orderBy('id')->get(),
-            'title' => 'Admin Page'
-        ]);
-    }
-
-    function vendor()
-    {
-        return view('admin.index', [
-            'title' => 'Vendor Page',
+            'title' => 'User Page',
+            'user' => User::findOrFail($id)
         ]);
     }
 
     // *******************
-    //      CRUD ADMIN
+    //      CRUD user
     // *******************
 
     function create()
     {
-        return view('admin.create', [
+        return view('user.create', [
             'title' => 'Create Page',
         ]);
     }
@@ -39,12 +33,12 @@ class AdminController extends Controller
     function store(StoreRequest $request)
     {
         User::create($request->all());
-        return redirect()->route('admin.index')->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
     }
 
     function show($id)
     {
-        return view('admin.show', [
+        return view('user.show', [
             'users' => User::findOrFail($id),
             'title' => 'Show Page',
         ]);
@@ -52,7 +46,7 @@ class AdminController extends Controller
 
     function edit($id)
     {
-        return view('admin.edit', [
+        return view('user.edit', [
             'title' => 'Edit Page',
             'users' => User::where('id', $id)->first(),
         ]);
@@ -82,7 +76,7 @@ class AdminController extends Controller
         // ]);
         /* ************************************************** */
 
-        return redirect()->route('admin.index')->with('success', 'User berhasil diupdate.');
+        return redirect()->route('user.index')->with('success', 'User berhasil diupdate.');
     }
 
 
@@ -102,6 +96,6 @@ class AdminController extends Controller
         $users = User::findOrFail($id);
         $users->delete($users);
 
-        return redirect()->route('admin.index')->with('success', 'User deleted successfully');
+        return redirect()->route('user.index')->with('success', 'User deleted successfully');
     }
 }
